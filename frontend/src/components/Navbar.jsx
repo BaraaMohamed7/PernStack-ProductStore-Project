@@ -1,6 +1,9 @@
-import { Link } from "react-router";
-import { ShoppingCartIcon } from "lucide-react";
+import { Link, useResolvedPath } from "react-router";
+import { ShoppingCartIcon, ShoppingBagIcon } from "lucide-react";
+import ThemeSelector from "./ThemeSelector.jsx";
 const Navbar = () => {
+	const { pathname } = useResolvedPath();
+	const isHome = pathname === "/";
 	return (
 		<div
 			className='bg-base-100/80 backdrop-blur-lg
@@ -21,6 +24,21 @@ const Navbar = () => {
 								</span>
 							</div>
 						</Link>
+					</div>
+
+					{/* Navigation Links */}
+					<div className='flex items-center gap-4'>
+						<ThemeSelector />
+						{isHome && (
+							<div className='indicator'>
+								<div className='p-2 rounded-full hover:bg-base-100 transition-colors'>
+									<ShoppingBagIcon className='size-5' />
+									<span className='badge badge-sm badge-primary indicator-item'>
+										0
+									</span>
+								</div>
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
