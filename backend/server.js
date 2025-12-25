@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import productRoutes from './routes/productRoutes.js';
-import { sql } from '../config/db.js';
+import { sql } from './config/db.js';
 import { aj } from './lib/arcjet.js';
 dotenv.config();
 const app = express();
@@ -18,7 +18,8 @@ app.use(morgan('dev'));
 app.use(async (req, res, next) => {
   try {
     const decision = await aj.protect(req, {
-      requested: 1
+      requested: 1,
+      ip: req.ip,
     });
 
 
