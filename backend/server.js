@@ -6,15 +6,27 @@ import dotenv from 'dotenv';
 import productRoutes from './routes/productRoutes.js';
 import { sql } from './config/db.js';
 import { aj } from './lib/arcjet.js';
+import path from 'path';
+
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
+const __dirname = path.resolve();
+
 app.use(express.json());
 app.use(cors());
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
 app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
 
+  app.get('/*{splat}', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
+  })
+}
 app.use(async (req, res, next) => {
   try {
     const decision = await aj.protect(req, {
